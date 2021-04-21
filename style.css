@@ -37,6 +37,21 @@ body{
 	color:rgb(59, 2, 2)
 
 }
+#startGame::after {
+	content: "";
+	display: table;
+	clear: both;
+  }
+
+
+
+.gameSettings{
+	text-align: left;
+}
+.userNameDiv{
+	text-align: left;
+}
+
 
 /* modal style */			
 /* The Modal (background) */
@@ -86,7 +101,7 @@ body{
 
 .modal-header {
 	padding: 2px 16px;
-	background-color: #800000;
+	background-color: rgb(15, 179, 143);
 	color: white;
 }
 
@@ -94,9 +109,10 @@ body{
 
 .modal-footer {
 	padding: 2px 16px;
-	background-color: #800000;
+	background-color: rgb(15, 179, 143);
 	color: white;
 }
+
 
 /* Add Animation */
 @-webkit-keyframes slideIn {
