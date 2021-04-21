@@ -1,5 +1,9 @@
 var context;
 var pac = new Object();
+var pacUp;
+var pacDown;
+var pacLeft;
+var pacRight;
 var monster1 = new Object();
 var monster2 = new Object();
 var monster3 = new Object();
@@ -18,10 +22,12 @@ var pac_color;
 var start_time;
 var time_elapsed;
 var interval;
-var lostGame = false;
+var firstDraw = false;
 var Color5;
 var Color15;
 var Color25;
+var KeyPressedPacImg;
+
 
 $(document).ready(function() {
 	context = canvas.getContext("2d");
@@ -98,9 +104,6 @@ $(document).ready(function() {
 function enterUserK() {
 	localStorage.setItem("k", "k");
 }
-
-//var userName = document.getElementById('userName');
-//var password = document.getElementById('password');
 
 function store() {
 	userName = $("#regUserName").val();
@@ -249,17 +252,25 @@ function getRandColor() {
 	document.getElementById('userNameLabel').innerHTML = "User Name: " + userName.value;
 
 	// sanding all input to start func
-	Start(upBtn, downBtn, leftBtn, rightBtn, ballsNum, gameTime, monstersNum, Color1, Color2, Color3);
+	Start(upBtn, downBtn, leftBtn, rightBtn, ballsNum, gameTime, monstersNum);
 
 }
 
   
 
-function Start(upBtn, downBtn, leftBtn, rightBtn, ballsNum, gameTime, monstersNum, Color1, Color2, Color3) {
+function Start(upBtn, downBtn, leftBtn, rightBtn, ballsNum, gameTime, monstersNum) {
 
 	// pac image
 	pacImage = new Image();
 	pacImage.src = "Images/tempPac.png";
+	pacUp = new Image();
+	pacUp.src = "Images/pacUp.png";
+	pacDown = new Image();
+	pacDown.src = "Images/pacDown.png";
+	pacLeft = new Image();
+	pacLeft.src = "Images/pacLeft.png";
+	pacRight = new Image();
+	pacRight.src = "Images/pacRight.png";
 
 	// Monster image
 
@@ -378,9 +389,6 @@ function Start(upBtn, downBtn, leftBtn, rightBtn, ballsNum, gameTime, monstersNu
 			monster4.j = 1;}
 		monster_remain--;
 	}
-	function reset() {
-
-	};
 
 	keysDown = {};
 	addEventListener(
@@ -399,6 +407,10 @@ function Start(upBtn, downBtn, leftBtn, rightBtn, ballsNum, gameTime, monstersNu
 	);
 	interval = setInterval(UpdatePosition, 250);
 }
+
+	function reset() {
+
+	};
 
 function findRandomEmptyCell(board) {
 	var i = Math.floor(Math.random() * 10 + 1);
@@ -437,16 +449,30 @@ function Draw() {
 			center.x = i * 60 + 30;
 			center.y = j * 60 + 30;
 			if (board[i][j] == 2) {
-				//context.drawImage(pacImage, pac.i, pac.j,60,60);
-				context.beginPath();
-				context.arc(center.x, center.y, 30, 0.15 * Math.PI, 1.85 * Math.PI); // half circle
-				context.lineTo(center.x, center.y);
-				context.fillStyle = pac_color; //color
-				context.fill();
-				context.beginPath();
-				context.arc(center.x + 5, center.y - 15, 5, 0, 2 * Math.PI); // circle
-				context.fillStyle = "black"; //color
-				context.fill();
+				if (KeyPressedPacImg==1){
+					context.drawImage(pacUp, center.x-30, center.y-30 ,60,60);
+				}
+				if (KeyPressedPacImg==2){
+					context.drawImage(pacDown, center.x-30, center.y-30 ,60,60);
+				}
+				if (KeyPressedPacImg==3){
+					context.drawImage(pacLeft, center.x-30, center.y-30 ,60,60);
+				}
+				if (KeyPressedPacImg==4){
+					context.drawImage(pacRight, center.x-30, center.y-30 ,60,60);
+				}
+				if (KeyPressedPacImg==null){
+					context.drawImage(pacRight, center.x-30, center.y-30 ,60,60);
+				}
+				// context.beginPath();
+				// context.arc(center.x, center.y, 30, 0.15 * Math.PI, 1.85 * Math.PI); // half circle
+				// context.lineTo(center.x, center.y);
+				// context.fillStyle = pac_color; //color
+				// context.fill();
+				// context.beginPath();
+				// context.arc(center.x + 5, center.y - 15, 5, 0, 2 * Math.PI); // circle
+				// context.fillStyle = "black"; //color
+				// context.fill();
 			} else if (board[i][j] == 5) {
 				context.beginPath();
 				context.arc(center.x, center.y, 15, 0, 2 * Math.PI); // circle
@@ -540,6 +566,9 @@ function UpdatePosition() {
 		window.clearInterval(interval);
 		window.alert("Game completed");
 	} else {
+		if (x != null){
+			KeyPressedPacImg=x;
+		}
 		Draw();
 	}
 }
