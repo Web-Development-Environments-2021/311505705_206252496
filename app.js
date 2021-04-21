@@ -8,6 +8,7 @@ var monster1Image;
 var monster2Image;
 var monster3Image;
 var monster4Image;
+var wallImage;
 
 var pacImage;
 var board;
@@ -18,6 +19,9 @@ var start_time;
 var time_elapsed;
 var interval;
 var lostGame = false;
+var Color5;
+var Color15;
+var Color25;
 
 $(document).ready(function() {
 	context = canvas.getContext("2d");
@@ -39,7 +43,7 @@ $(document).ready(function() {
 		return this.optional(element) || /^[5-8][0-9]?$|^90$/i.test(value);
 	}, "the number of balls must be between 50-90");
 
-	$('#registerForm').validate({
+	$('#registerDetails').validate({
 		rules: {
 			regUserName: {required: true},
 			regPassword: {required: true,minlength: 6,lettersAndNumbers: true},
@@ -48,24 +52,47 @@ $(document).ready(function() {
 			date: {required: true,},
 			},
 		messages: {
-			regUserName: {required: "\n Please enter a user name",},
+			regUserName: {required: "Please enter a user name",},
 			fullName: {required: "Please enter a name",},
 			regPassword: {
-				required: "\n please enter a valid password",
-				minlength: "\n Your password most consist at least 6 characters"},
-			Email: {required: "\n please enter a valid email",},
-			date: {required: "\n Please enter a birthdate",}
+				required: "please enter a valid password",
+				minlength: "Your password most consist at least 6 characters"},
+			Email: {required: "please enter a valid email",},
+			date: {required: "Please enter a birthdate",}
 		}
 	})
 
 	$('#Registerbtn').click(function () {
-		if ($("#registerForm").valid()) {
+		if ($("#registerDetails").valid()) {
 			store();
 			changeView(settings);
 		}
 	});
 
-	Start();
+	$('#setSubmit').click(function () {
+		if ($("#settingDetails").valid()) {
+			setGame();
+		}
+	});
+
+	$('#settingDetails').validate({
+		rules: {
+			ballsNum: {required: true, numberonly: true},
+			gameTime: {required: true, time: true},
+			upButton: {maxlength: 1,},
+			downButton: {maxlength: 1,},
+			rightButton: {maxlength: 1,},
+			leftButton: {maxlength: 1,},
+		},
+		messages: {
+			ballsNum: {required: "Enter a number between 50 to 90",},
+			gameTime: {required: "Enter a number equal or bigger than 60 sec",},
+			upBotton: {maxlength: "Enter only one char",},
+			downBotton: {maxlength: "Enter only one char",},
+			leftBotton: {maxlength: "Enter only one char",},
+			rightBotton: {maxlength: "Enter only one char",},
+		}
+	})
 });
 
 function enterUserK() {
@@ -101,114 +128,258 @@ function checkLogin() {
 	}
 }
 
+function randSettings() {
+	$("#firstColor").val(getRandColor());
+	$("#secondColor").val(getRandColor());
+	$("#thirdColor").val(getRandColor());
+	let balls = Math.floor(Math.random() * 41) + 50;
+	$("#ballsNum").val(balls);
+	let time = Math.floor(Math.random() * 61) + 60;
+	$("#gameTime").val(time);
+	let monsters = Math.floor(Math.random() * 4) + 1;
+	$("#monstersNum").val(monsters);
+	console.log(getRandColor())
+}
 
-function Start() {
+function getRandColor() {
+	var letters = '0123456789ABCDEF';
+	var color = '#';
+	for (var i = 0; i < 6; i++) {
+	  color += letters[Math.floor(Math.random() * 16)];
+	}
+	return color;
+  }
 
-		// pac image
+  function setGame() {
+	Live = 5;
+	changeView(startGame);
+	// set arrows
+	let upBtn = "38"
+	let downBtn = "40"
+	let leftBtn = "37"
+	let rightBtn = "39"
+
+	// play buttons
+	let upTemp = $("#upButton").val();
+	if (upTemp != "") {
+		upBtn = upTemp.toUpperCase().charCodeAt(0);
+	}
+	let downTemp = $("#downButton").val();
+	if (downTemp != "") {
+		downBtn = downTemp.toUpperCase().charCodeAt(0);
+	}
+	let leftTemp = $("#leftButton").val();
+	if (leftTemp != "") {
+		leftBtn = leftTemp.toUpperCase().charCodeAt(0);
+	}
+	let rightTemp = $("#rightButton").val();
+	if (rightTemp != "") {
+		rightBtn = rightTemp.toUpperCase().charCodeAt(0);
+	}
+
+	// Char of play buttons
+	let upChar = "🡡"
+	let downChar = "🡣"
+	let rightChar = "🡢"
+	let leftChar = "🡠"
+
+	let upCharTemp = $("#upButton").val();
+	if (upCharTemp != ""){
+		upLabel.value = upCharTemp;
+		upChar = upCharTemp;
+	}
+	document.getElementById('upLabel').innerHTML = "Up: " + upChar;
+
+	let downCharTemp = $("#downButton").val();
+	if (downCharTemp != "") {
+		downLabel.value = downCharTemp;
+		downChar = downCharTemp;
+	}
+	document.getElementById('downLabel').innerHTML = "Down: " + downChar;
+
+	let rightCharTemp = $("#rightButton").val();
+	if (rightCharTemp != "") {
+		rightLabel.value = rightCharTemp;
+		rightChar = rightCharTemp;
+	}
+	document.getElementById('rightLabel').innerHTML = "Right: " + rightChar;
+
+	let leftCharTemp = $("#leftButton").val();
+	if (leftCharTemp != "") {
+		leftLabel.value = leftCharTemp;
+		leftChar = leftCharTemp;
+	}
+	document.getElementById('leftLabel').innerHTML = "Left: " + leftChar;
+
+	// Num of Balls
+	var ballsNum = $("#ballsNum").val();
+	ballsLabel.value = ballsNum;
+	document.getElementById('ballsLabel').innerHTML = "Number Of Balls: " + ballsNum;
 	
-		pacImage = new Image();
-		pacImage.src = "Images/tempPac.png";
+	// Time of Game
+	gameTime = parseInt($("#gameTime").val());
+	timeLabel.value = gameTime;
+	document.getElementById('timeLabel').innerHTML = "Game Time: " + gameTime;
+
+	// Num of Monsters
+	var monstersNum = $("#monstersNum").val();
+	monstersLabel.value = monstersNum;
+	document.getElementById('monstersLabel').innerHTML = "Number Of Ghosts: " + monstersNum;
+
+	// Balls colors
+	var Color1 = $("#firstColor").val();
+	firstColorLabel.value = Color1;
+	Color5 = Color1;
+	document.getElementById('firstColorLabel').innerHTML = "5 Points Ball Color";
+	document.getElementById('firstColorLabel').style.color = Color1;
+	var Color2 = $("#secondColor").val();
+	SecondColorLabel.value = Color2;
+	Color15 = Color2;
+	document.getElementById('SecondColorLabel').innerHTML = "15 Points Ball Color";
+	document.getElementById('SecondColorLabel').style.color = Color2;
+	var Color3 = $("#thirdColor").val();
+	ThirdColorLabel.value = Color3;
+	Color25 = Color3;
+	document.getElementById('ThirdColorLabel').innerHTML = "25 Points Ball Color";
+	document.getElementById('ThirdColorLabel').style.color = Color3;
+
 	
-		// Monster image
-	
-		monster1Image = new Image();
-		monster1Image.src = "Images/monster1.jpeg";
-		monster2Image = new Image();
-		monster2Image.src = "Images/monster2.jpeg";
-		monster3Image = new Image();
-		monster3Image.src = "Images/monster3.jpeg";
-		monster4Image = new Image();
-		monster4Image.src = "Images/monster4.jpeg";
+	// User name
+	userNameLabel.value = userName;
+	document.getElementById('userNameLabel').innerHTML = "User Name: " + userName.value;
+
+	// sanding all input to start func
+	Start(upBtn, downBtn, leftBtn, rightBtn, ballsNum, gameTime, monstersNum, Color1, Color2, Color3);
+
+}
+
+  
+
+function Start(upBtn, downBtn, leftBtn, rightBtn, ballsNum, gameTime, monstersNum, Color1, Color2, Color3) {
+
+	// pac image
+	pacImage = new Image();
+	pacImage.src = "Images/tempPac.png";
+
+	// Monster image
+
+	monster1Image = new Image();
+	monster1Image.src = "Images/monster1.jpeg";
+	monster2Image = new Image();
+	monster2Image.src = "Images/monster2.jpeg";
+	monster3Image = new Image();
+	monster3Image.src = "Images/monster3.jpeg";
+	monster4Image = new Image();
+	monster4Image.src = "Images/monster4.jpeg";
+
+	// Wall image
+	wallImage = new Image();
+	wallImage.src = "Images/wall.jpg";
 
 
 	board = new Array();
 	score = 0;
+	var ball_5 = Math.floor(ballsNum*0.6);
+	var ball_15 = Math.floor(ballsNum*0.3);
+	var ball_25 = ballsNum-ball_5-ball_15;
+	gameTime = gameTime
 	pac_color = "yellow";
-	var cnt = 100; // size of board
-	var food_remain = 50; // num of dots
-	var monster_remain = 4; // num of monster
+	var cnt = 144; // size of board
+	var food_remain = ballsNum; // num of dots
+	var monster_remain = monstersNum; // num of monster
 	var pacman_remain = 1; 
 	start_time = new Date();
-	for (var i = 0; i < 10; i++) {
+	for (var i = 0; i < 12; i++) {
 		board[i] = new Array();
 		//put obstacles 
-		for (var j = 0; j < 10; j++) {
-			if (
+		for (var j = 0; j < 12; j++) {
+			
+			if ((i==0)||(i==11)||(j==0)||(j==11)||
 				(i == 3 && j == 3) ||
+				(i == 6 && j == 9) ||
+				(i == 7 && j == 9) ||
 				(i == 3 && j == 4) ||
 				(i == 3 && j == 5) ||
 				(i == 6 && j == 1) ||
 				(i == 6 && j == 2)
 			) {
 				board[i][j] = 4;
-			} else {
+			} else if (	
+				(i == 1 && j == 1) ||
+				(i == 1 && j == 10) ||
+				(i == 10 && j == 10) ||
+				(i == 10 && j == 1)){
+				board[i][j] = 3;
+				} 
+			
+			else {
+				
+					board[i][j] = 0;
 				 // TODO: cant put dot in corner
-					var randomNum = Math.random();
-					if (randomNum <= (1.0 * food_remain) / cnt) {
-						food_remain--;
-						board[i][j] = 1;
-					} else if (randomNum < (1.0 * (pacman_remain + food_remain)) / cnt) {
-						pac.i = i;
-						pac.j = j;
-						pacman_remain--;
-						board[i][j] = 2;
-					} else {
-						board[i][j] = 0;
-					}
-					cnt--;
+					// var randomNum = Math.random();
+					// if (randomNum <= (1.0 * food_remain) / cnt) {
+					// 	food_remain--;
+					// 	board[i][j] = 5;
+					// } else if (randomNum < (1.0 * (pacman_remain + food_remain)) / cnt) {
+						// pac.i = i;
+						// pac.j = j;
+					// 	pacman_remain--;
+					// 	board[i][j] = 2;
+					// } else {
+					// 	board[i][j] = 0;
+					// }
+					// cnt--;
 				}
 		}
 	}
-	while (food_remain > 0) {
+	while (pacman_remain > 0) {
 		var emptyCell = findRandomEmptyCell(board);
-		board[emptyCell[0]][emptyCell[1]] = 1;
-		food_remain--;
+		board[emptyCell[0]][emptyCell[1]] = 2;
+		pac.i = emptyCell[0];
+		pac.j = emptyCell[1];
+		pacman_remain--;
+	}
+	// while (food_remain > 0) {
+	// 	var emptyCell = findRandomEmptyCell(board);
+	// 	board[emptyCell[0]][emptyCell[1]] = 5;
+	// 	food_remain--;
+	// }
+	while (ball_5 > 0) {
+		var emptyCell = findRandomEmptyCell(board);
+		board[emptyCell[0]][emptyCell[1]] = 5;
+		ball_5--;
+	}
+	while (ball_15 > 0) {
+		var emptyCell = findRandomEmptyCell(board);
+		board[emptyCell[0]][emptyCell[1]] = 15;
+		ball_15--;
+	}
+	while (ball_25 > 0) {
+		var emptyCell = findRandomEmptyCell(board);
+		board[emptyCell[0]][emptyCell[1]] = 25;
+		ball_25--;
 	}
 	while (monster_remain > 0) {
-		board[0][0] = 3;
-		board[0][9] = 3;
-		board[9][9] = 3;
-		board[9][0] = 3;
+		board[1][1] = 3;
+		board[1][10] = 3;
+		board[10][10] = 3;
+		board[10][1] = 3;
 		if (monster_remain == 4){
-			monster1.i = 0;
-			monster1.j = 0;}
+			monster1.i = 1;
+			monster1.j = 1;}
 		if (monster_remain == 3){
-			monster2.i = 0;
-			monster2.j = 9;}
+			monster2.i = 1;
+			monster2.j = 10;}
 	    if (monster_remain == 2){
-			monster3.i = 9;
-			monster3.j = 9;}
+			monster3.i = 10;
+			monster3.j = 10;}
 		if (monster_remain == 1){
-			monster4.i = 9;
-			monster4.j = 0;}
+			monster4.i = 10;
+			monster4.j = 1;}
 		monster_remain--;
 	}
 	function reset() {
 
-			var emptyCell = findRandomEmptyCell(board); // place pac
-			board[emptyCell[0]][emptyCell[1]] = 2;
-
-		monster_remain = 4
-		while (monster_remain > 0) {
-			board[0][0] = 3;
-			board[0][9] = 3;
-			board[9][9] = 3;
-			board[9][0] = 3;
-			if (monster_remain == 4){
-				monster1.i = 0;
-				monster1.j = 0;}
-			if (monster_remain == 3){
-				monster2.i = 0;
-				monster2.j = 9;}
-			if (monster_remain == 2){
-				monster3.i = 9;
-				monster3.j = 9;}
-			if (monster_remain == 1){
-				monster4.i = 9;
-				monster4.j = 0;}
-			monster_remain--;
-		}
-		Draw()
 	};
 
 	keysDown = {};
@@ -230,11 +401,11 @@ function Start() {
 }
 
 function findRandomEmptyCell(board) {
-	var i = Math.floor(Math.random() * 9 + 1);
-	var j = Math.floor(Math.random() * 9 + 1);
+	var i = Math.floor(Math.random() * 10 + 1);
+	var j = Math.floor(Math.random() * 10 + 1);
 	while (board[i][j] != 0) {
-		i = Math.floor(Math.random() * 9 + 1);
-		j = Math.floor(Math.random() * 9 + 1);
+		i = Math.floor(Math.random() * 10 + 1);
+		j = Math.floor(Math.random() * 10 + 1);
 	}
 	return [i, j];
 }
@@ -260,8 +431,8 @@ function Draw() {
 	lblTime.value = time_elapsed;
 	lblLive.value = Live;
 
-	for (var i = 0; i < 10; i++) {
-		for (var j = 0; j < 10; j++) {
+	for (var i = 0; i < 12; i++) {
+		for (var j = 0; j < 12; j++) {
 			var center = new Object();
 			center.x = i * 60 + 30;
 			center.y = j * 60 + 30;
@@ -276,10 +447,20 @@ function Draw() {
 				context.arc(center.x + 5, center.y - 15, 5, 0, 2 * Math.PI); // circle
 				context.fillStyle = "black"; //color
 				context.fill();
-			} else if (board[i][j] == 1) {
+			} else if (board[i][j] == 5) {
 				context.beginPath();
 				context.arc(center.x, center.y, 15, 0, 2 * Math.PI); // circle
-				context.fillStyle = "black"; //color
+				context.fillStyle = Color5; //color
+				context.fill();
+			} else if (board[i][j] == 15) {
+				context.beginPath();
+				context.arc(center.x, center.y, 15, 0, 2 * Math.PI); // circle
+				context.fillStyle = Color15; //color
+				context.fill();
+			} else if (board[i][j] == 25) {
+				context.beginPath();
+				context.arc(center.x, center.y, 15, 0, 2 * Math.PI); // circle
+				context.fillStyle = Color25; //color
 				context.fill();
 			} else if (board[i][j] == 3) {
 				//context.drawImage(monsterImage, monster.i, monster.j,60,60);
@@ -288,10 +469,12 @@ function Draw() {
 				context.fillStyle = "pink"; //color
 				context.fill();
 			} else if (board[i][j] == 4) {
-				context.beginPath();
-				context.rect(center.x - 30, center.y - 30, 60, 60);
-				context.fillStyle = "grey"; //color
-				context.fill();
+				context.drawImage(wallImage, center.x-30, center.y-30 ,60,60);
+
+				// context.beginPath();
+				// context.rect(center.x - 30, center.y - 30, 60, 60);
+				// context.fillStyle = "grey"; //color
+				// context.fill();
 			}
 		}
 	}
@@ -309,10 +492,10 @@ function UpdatePosition() {
 		}
 	}
 	if (x == 2) {
-		if (pac.j < 9 && board[pac.i][pac.j + 1] != 4) {
+		if (pac.j < 10 && board[pac.i][pac.j + 1] != 4) {
 			pac.j++;
 		}
-		if (pac.j < 9 && board[pac.i][pac.j + 1] == 3) {
+		if (pac.j < 10 && board[pac.i][pac.j + 1] == 3) {
 			//Live --
 		}
 	}
@@ -325,10 +508,10 @@ function UpdatePosition() {
 		}
 	}
 	if (x == 4) {
-		if (pac.i < 9 && board[pac.i + 1][pac.j] != 4) {
+		if (pac.i < 10 && board[pac.i + 1][pac.j] != 4) {
 			pac.i++;
 		}
-		if (pac.i < 9 && board[pac.i + 1][pac.j] == 3) {
+		if (pac.i < 10 && board[pac.i + 1][pac.j] == 3) {
 			//Live --
 		}
 	}
@@ -338,8 +521,14 @@ function UpdatePosition() {
 	if(pac.i == monster3.i && pac.j == monster3.j){ Live--; Start() }
 	if(pac.i == monster4.i && pac.j == monster4.j){ Live--; Start() }
 
-	if (board[pac.i][pac.j] == 1) {
-		score++;
+	if (board[pac.i][pac.j] == 5) {
+		score = score + 5;
+	}
+	if (board[pac.i][pac.j] == 15) {
+		score = score + 15;
+	}
+	if (board[pac.i][pac.j] == 25) {
+		score = score + 25;
 	}
 	board[pac.i][pac.j] = 2;
 	var currentTime = new Date();
@@ -355,52 +544,50 @@ function UpdatePosition() {
 	}
 }
 
-function changeView(pageName) {
-	if (pageName == login) {
-		$("#welcome").hide();
-		$("#login").show();
-		$("#register").hide();
-		$("#about").hide();
-		$("#settings").hide();
-		$("#Game").hide();
-
-
-	}
-	else if (pageName == welcome) {
+function changeView(page) {
+	if (page == welcome) {
 		$("#welcome").show();
 		$("#login").hide();
 		$("#register").hide();
 		$("#about").hide();
 		$("#settings").hide();
-		$("#Game").hide();
-
-
+		$("#startGame").hide();
 	}
-	else if (pageName == register) {
-		$("#welcome").hide();
-		// $("#login").hide();
+
+	else if (page == register) {
 		$("#register").show();
-		// $("#about").hide();
-		// $("#settings").hide();
-		// $("#Game").hide();
+		$("#welcome").hide();
+		$("#login").hide();
+		$("#about").hide();
+		$("#settings").hide();
+		$("#startGame").hide();
 
 	}
-	else if (pageName == settings) {
+
+	else if (page == login) {
+		$("#login").show();
+		$("#welcome").hide();
+		$("#register").hide();
+		$("#about").hide();
+		$("#settings").hide();
+		$("#startGame").hide();
+	}
+
+	else if (page == settings) {
+		$("#settings").show();
 		$("#welcome").hide();
 		$("#login").hide();
 		$("#register").hide();
 		$("#about").hide();
-		$("#settings").show();
-		$("#Game").hide();
+		$("#startGame").hide();
 
 	}
-	else if (pageName == Game) {
+	else if (page == startGame) {
+		$("#startGame").show();
 		$("#welcome").hide();
 		$("#login").hide();
 		$("#register").hide();
 		$("#about").hide();
 		$("#settings").hide();
-		$("#Game").show();
-
 	}
 }

@@ -94,7 +94,7 @@
 
 			<div id="register" style="display:none" >
 				<p class="title">Register</p>
-				<form id="registerForm" name="registerForm" method="POST">
+				<form id="registerDetails" name="registerDetails" method="POST">
 					<div class="formDetails">
 						User name:   
 						<input id="regUserName" type="text" name="regUserName" class="form-control" placeholder="Enter your User Name"/>
@@ -133,7 +133,7 @@
 
 			<div id="settings" style="display:none" >
 				<p class="title">Settings</p>
-				<form id="settingForm" name="settingForm">
+				<form id="settingDetails" name="settingDetails">
 					<div class="chooseButton">
 						The default buttons are: 🡡 🡣 🡢 🡠
 						<br/>
@@ -158,8 +158,8 @@
 					<div class="chooseNumberBalls">
 						Choose number of balls between 50 to 90:
 						<br/>
-						<input id="numberOfBalls" type="range" value="60" min="50" max="90" oninput="this.nextElementSibling.value = this.value">
-						<output>60</output>
+						<input id="ballsNum" type="range" value="50" min="50" max="90" oninput="this.nextElementSibling.value = this.value">
+						<output > 50 </output>
 						<br/>
 						<br/>
 					</div>
@@ -184,9 +184,9 @@
 						<br/>
 					</div>
 
-					<div class="chooseColor">
+					<div class="chooseNumOfMonster">
 						Choose the number of monsters:
-						<select id="numberOfMonsters" type="number">
+						<select id="monstersNum" type="number">
 							<option value = "1"> 1 </option>
 							<option value = "2"> 2 </option>
 							<option value = "3"> 3 </option>
@@ -196,33 +196,75 @@
 						</select>
 						<br/>
 						<br/>
-						<button type="button"  onclick="randomSettings()">random</button>
-						<input id="submitSettings" type="button"  value="submit" />
+						<button type="button"  onclick="randSettings()">random</button>
+						<input id="setSubmit" type="button"  value="submit" />
 					</div>
 				</form>
 			</div>
 
 			<div id="startGame" style="display: none;">
-				<div id="score" style="display: inline;">
-					<label for="lblScore">SCORE:</label>
-					<input id="lblScore" type="text" />
+				<div class="userNameDiv">
+				<label id="userNameLabel" style="text-align: left;"></label>
 				</div>
-				<div id="time" style="display: inline;">
-					<label for="lblTime">TIME:</label>
-					<input id="lblTime" type="text" />
+				<br/>	
+				<div id="game" style=" float:left; ">
+					<div id="gameData">
+						<div id="score" style="display: inline;">
+							<label for="lblScore">SCORE:</label>
+							<input id="lblScore" type="text" />
+						</div>
+						<div id="time" style="display: inline;">
+							<label for="lblTime">TIME:</label>
+							<input id="lblTime" type="text" />
+						</div>
+						<div id="live" style="display: inline;">
+							<label for="lblLive">LIVE:</label>
+							<input id="lblLive" type="text" />
+						</div>	
+					</div>
+					<br/>
+					<canvas id="canvas" height="800" width="800"></canvas>
 				</div>
-				<div id="live" style="display: inline;">
-					<label for="lblLive">LIVE:</label>
-					<input id="lblLive" type="text" />
+				<div id="gameSettings" style="float:left; text-align: left;">
+					<br/>
+					<br/>
+					<label id="upLabel"></label>
+					<br/>
+					<br/>
+					<label id="downLabel"></label>
+					<br/>
+					<br/>
+					<label id="leftLabel"></label>
+					<br/>
+					<br/>
+					<label id="rightLabel"></label>
+					<br/>
+					<br/>
+					<label id="ballsLabel"></label>
+					<br/>
+					<br/>
+					<label id="timeLabel"></label>
+					<br/>
+					<br/>
+					<label id="monstersLabel"></label>
+					<br/>
+					<br/>
+					<label id="firstColorLabel"></label>
+					<br/>
+					<br/>
+					<label id="SecondColorLabel"></label>
+					<br/>
+					<br/>
+					<label id="ThirdColorLabel"></label>
+					<br/>
+					<br/>
+					<br/>
+					<input id="startNewGame" type="button" value="Start New Game" />
 				</div>
-				<div id="game">
-					<canvas id="canvas" height="600" width="600"></canvas>
-				</div>
-			</div>
 		</div>
 
 		<footer>
-			<h2 id="details"> To contect us, please leave a massege:</h2>
+			<h3 id="details"> To contect us, please leave a massege:</h3>
 			<form action="mailto:orikiba@gmail.com" method="post" enctype="text/plain">
 				E-mail Address:<br>
 				<input type="text" name="Email "><br>
