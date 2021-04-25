@@ -10,19 +10,23 @@
 
 	<body>
 		<header>
-			<img src="Images/tempPac.png" alt="logo" width="100" height="100">
-			<h2 id="appName"> THE BEST GAMENAME IN THE WORLD!!!!</h2>
+			<img src="Images/logo.png" alt="logo" width="600" height="100">
+			<br/>
+			<img src="Images/logo3.gif">
 			<h3 id="ourName"> Mor Zweig - 311505705, Ori Ben-Artzy - 206252496</h3>
 		</header>
-
+		<hr>
 		<div id="Menu" style="display: block;">
-			<a id="welcomeButton" href="#" onclick="changeView(welcome)">Welcome | </a>
-			<a id="registerButton" href="#" onclick="changeView(register)">Register | </a>
-			<a id="loginButton" href="#" onclick="changeView(login)">Login | </a>
-			<a id="aboutButton" href="#" data-toggle="modal" data-target="#myModal">About</a>
+			<a id="welcomeButton"  class= "menuBtn" style="text-decoration: none; padding: 0px 20px;" href="#" onclick="changePage(welcome)">Welcome</a>
+			<img src="Images/emoji.png" width="15" height="15">
+			<a id="registerButton" class= "menuBtn" style="text-decoration: none;padding: 0px 20px;" href="#" onclick="changePage(register)">Register</a>
+			<img src="Images/emoji.png" width="15" height="15">
+			<a id="loginButton" class= "menuBtn" style="text-decoration: none;padding: 0px 20px;" href="#" onclick="changePage(login)">Login</a>
+			<img src="Images/emoji.png"  width="15" height="15">
+			<a id="aboutButton" class= "menuBtn" style="text-decoration: none;padding: 0px 20px;" href="#" data-toggle="modal" data-target="#myModal">About</a>
 		</div>
-
-			<!-- The Modal -->
+		<hr>
+		<!-- The Modal -->
 		<div id="myModal" class="modal">
 
 		<!-- Modal content -->
@@ -78,41 +82,50 @@
 			</script>
 
 		<div id="content" style="display: block;">
+			<div id="welcome" style="display: block;">		
 			<br/>
 			<br/>
+				<img src="Images/logo.png" alt="logo" width="600" height="100">
 			<br/>
 			<br/>
-			<div id="welcome" style="display: block;">
-				<img src="Images/tempPac.png" alt="logo" width="100" height="100">
-			<br/>
-			<br/>
-				<div id="firstButton">
-					<button type="button" class="welcomeButton" onclick="changeView(register)">Register</button>
-					<button type="button" class="welcomeButton" onclick="changeView(login)">Login</button>
+				<div id="frsButton">
+					<button type="button" class="firstButton" onclick="changePage(register)">Register</button>
+					<button type="button" class="firstButton" onclick="changePage(login)">Login</button>
 				</div>
+				<br/>
+				<br/>
 			</div>
+
 
 			<div id="register" style="display:none" >
 				<p class="title">Register</p>
 				<form id="registerDetails" name="registerDetails" method="POST">
 					<div class="formDetails">
+						<br/>
 						User name:   
 						<input id="regUserName" type="text" name="regUserName" class="form-control" placeholder="Enter your User Name"/>
+						<br/>
 						<br/>
 						password:   
 						<input id="regPassword" type="password" name="regPassword" class="form-control" placeholder="Enter your password"/>
 						<br/>
+						<br/>
 						Full name:   
 						<input id="fullName" type="text" name="fullName" class="form-control" placeholder="Enter your Full Name"/>
+						<br/>
 						<br/>
 						E-mail address:   
 						<input id="Email" type="email" name="Email" class="form-control" placeholder="Enter your E-mail"/>
 						<br/>
+						<br/>
 						Birth date:   
 						<input id="date" type="date" name="date" class="form-control"/>
+						<br/>
 					</div>
-					<input id="Registerbtn" type="button"  value="Register"/>
-					<input id="stylebtn" type="reset" value="Reset">
+					<br/>
+					<br/>
+					<input id="Registerbtn" class="contBtn" type="button"  value="Register"/>
+					<input id="stylebtn" class="contBtn" type="reset" value="Reset">
 				</form>
 			</div>
 
@@ -120,13 +133,16 @@
 				<p class="title">Login</p>
 				<form>
 					<div class="formDetails">
+						<br/>
 						Enter user name:
 						<input id="userName" type="text" placeholder="Enter User Name"/>
+						<br/>
 						<br/>
 						Enter password:
 						<input id="password" type="password"placeholder="Enter Password"/>
 						<br/>
-						<input type="button" value="login" onclick="checkLogin(settings)">
+						<br/>
+						<input class="contBtn" type="button" value="login" onclick="checkLogin(settings)">
 					</div>
 				</form>
 			</div>
@@ -166,13 +182,13 @@
 
 					<div class="chooseColor">
 						 Choose color for 5 points ball:
-						<input id="firstColor" type="color" value="#00801c" />
+						<input id="firstColor" type="color" value="#ffcce6" />
 						<br/>
 						Choose color for 15 points ball:
-						<input id="secondColor" type="color" value="#db7c10" />
+						<input id="secondColor" type="color" value="#b3ffb3" />
 						<br/>
 						Choose color for 25 points ball:
-						<input id="thirdColor" type="color" value="#800000" />
+						<input id="thirdColor" type="color" value="#ffd9b3" />
 						<br/>
 						<br/>
 					</div>
@@ -196,8 +212,8 @@
 						</select>
 						<br/>
 						<br/>
-						<button type="button"  onclick="randSettings()">random</button>
-						<input id="setSubmit" type="button"  value="submit" />
+						<button class="contBtn" type="button"  onclick="randSettings()">random</button>
+						<input id="setSubmit" class="contBtn" type="button"  value="submit" />
 					</div>
 				</form>
 			</div>
@@ -223,7 +239,7 @@
 						</div>	
 					</div>
 					<br/>
-					<canvas id="canvas" height="800" width="800"></canvas>
+					<canvas id="canvas" height="800" width="800" ></canvas>
 				</div>
 				<div id="gameSettings" style="float:left; text-align: left;">
 					<br/>
@@ -258,20 +274,30 @@
 					<label id="ThirdColorLabel"></label>
 					<br/>
 					<br/>
+					<label id="pillLabel"> For 1 more live - eat the purple pill!  </label>
+					<img style="width: 20px; height: 20px" src="Images/pill3.png">
 					<br/>
-					<input id="startNewGame" type="button" value="Start New Game" />
+					<br/>
+					<label id="clockLabel"> For 20 more second - eat the clock!  </label>
+					<img style="width: 20px; height: 20px" src="Images/clock.png">
+					<br/>
+					<br/>
+					<br/>
+					<input id="startNewGame" class="contBtn" type="button" value="Start New Game"/>
 				</div>
 		</div>
-
 		<footer>
+			<br/>
+			<br/>
+			<hr>
 			<h3 id="details"> To contect us, please leave a massege:</h3>
 			<form action="mailto:orikiba@gmail.com" method="post" enctype="text/plain">
 				E-mail Address:<br>
 				<input type="text" name="Email "><br>
 				Message:<br>
 				<input type="text" name="Message " size="50"><br><br>
-				<input type="submit" value="Send">
-				<input type="reset" value="Reset">
+				<input class="contBtn" type="submit" value="Send">
+				<input class="contBtn" type="reset" value="Reset">
 				</form>
 		</footer>
 
