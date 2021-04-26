@@ -33,11 +33,14 @@
 		<div class="modal-content">
 		<div class="modal-header">
 			<span class="close">&times;</span>
-			<h2>About:</h2>
+			<h2>About</h2>
 		</div>
 		<div class="modal-body">
-			<p>we are Mor Zweig and Ori Ben-Artzy</p>
+			<p>Hi! We are Mor Zweig and Ori Ben-Artzy</p>
 			<p>Welcome to our game!!</p>
+			<p>We used the jQuery Plugin in validating the registration as rules and messages.</p>
+			<p>We used Template for validation as well in the full name field as letters and spaces only and in the password field as letters and numbers.</p>
+			<p>The main difficulty we encountered during the assignment was to understand the modular division of responsibilities between HTML5 and JS and plan well where it is best to place the snippets of code.</p>
 		</div>
 		<div class="modal-footer">
 			<h3>Enjoy &#127804</h3>
@@ -153,8 +156,8 @@
 					<div class="chooseButton">
 						The default buttons are: 🡡 🡣 🡢 🡠
 						<br/>
-						To change the default playing buttons press the preferred key
 						<br/>
+						Select your own buttons:
 						<br/>
 						Up Botton:
 						<input id="upButton" name="upButton" type="text" placeholder="🡡"/>
@@ -173,26 +176,25 @@
 
 					<div class="chooseNumberBalls">
 						Choose number of balls between 50 to 90:
-						<br/>
-						<input id="ballsNum" type="range" value="50" min="50" max="90" oninput="this.nextElementSibling.value = this.value">
-						<output > 50 </output>
+						<input id="ballsNum" name="ballsNum" type="number" style="width: 7em; text-align: center" min="50" max="90" value="50"/>
+						<!-- <input id="ballsNum" type="range" value="50" min="50" max="90" oninput="this.nextElementSibling.value = this.value">
+						<output > 50 </output> -->
 						<br/>
 						<br/>
 					</div>
 
 					<div class="chooseColor">
 						 Choose color for 5 points ball:
-						<input id="firstColor" type="color" value="#ffcce6" />
+						<input id="firstColor" type="color" value="#ea6692" />
 						<br/>
 						Choose color for 15 points ball:
-						<input id="secondColor" type="color" value="#b3ffb3" />
+						<input id="secondColor" type="color" value="#933993" />
 						<br/>
 						Choose color for 25 points ball:
-						<input id="thirdColor" type="color" value="#ffd9b3" />
+						<input id="thirdColor" type="color" value="#2d862d" />
 						<br/>
 						<br/>
 					</div>
-
 					<div class="chooseGameTime">
 						Select the duration of the game in seconds (minimum 60 seconds):
 						<input id="gameTime" name="gameTime" type="number" style="width: 7em; text-align: center" min="60"  value="60"/>
@@ -274,7 +276,7 @@
 					<label id="ThirdColorLabel"></label>
 					<br/>
 					<br/>
-					<label id="pillLabel"> For 1 more live - eat the purple pill!  </label>
+					<label id="pillLabel"> For 1 more live - eat the red pill!  </label>
 					<img style="width: 20px; height: 20px" src="Images/pill3.png">
 					<br/>
 					<br/>
@@ -290,7 +292,7 @@
 			<br/>
 			<br/>
 			<hr>
-			<h3 id="details"> To contect us, please leave a massege:</h3>
+			<h3 id="details">To contact us, please leave a message:</h3>
 			<form action="mailto:orikiba@gmail.com" method="post" enctype="text/plain">
 				E-mail Address:<br>
 				<input type="text" name="Email "><br>

@@ -13,7 +13,6 @@ var monster2Image;
 var monster3Image;
 var monster4Image;
 var wallImage;
-
 var pacImage;
 var board;
 var score;
@@ -22,7 +21,6 @@ var ballsFirstNum;
 var pac_color;
 var startTime;
 var time_elapsed;
-var interval;
 var firstDraw = false;
 var Color5;
 var Color15;
@@ -46,9 +44,11 @@ var sound = new Audio('Images/Bakara.mp3');
 sound.volume = 0.2;
 var eatSound = new Audio('Images/eatBonus.m4a');
 eatSound.volume = 0.1;
-
+var dieSound = new Audio('Images/die.mp3');
+dieSound.volume = 0.1;
 var userName;
-
+var interval1;
+var interval2;
 
 
 $(document).ready(function() {
@@ -115,10 +115,10 @@ $(document).ready(function() {
 		messages: {
 			ballsNum: {required: "Enter number between 50 to 90",},
 			gameTime: {required: "Enter number equal or longer than 60 sec",},
-			upBotton: {maxlength: "Enter only one char",},
-			downBotton: {maxlength: "Enter only one char",},
-			leftBotton: {maxlength: "Enter only one char",},
-			rightBotton: {maxlength: "Enter only one char",},
+			upButton: {maxlength: "Enter only one char",},
+			downButton: {maxlength: "Enter only one char",},
+			leftButton: {maxlength: "Enter only one char",},
+			rightButton: {maxlength: "Enter only one char",},
 		}
 	})
 
@@ -130,6 +130,7 @@ $(document).ready(function() {
 	});
 
 });
+
 
 document.onkeydown = function(evt) {
     evt = evt || window.event;
@@ -154,7 +155,6 @@ function checkLogin() {
 	var ans;
 	userName = document.getElementById('userName');
 	let userPassword = document.getElementById('password');
-	//let storedUserName = localStorage.key(userPassword);
 	let storedPassword = localStorage.getItem(userName.value);
 	if (userPassword.value == storedPassword) { // check Password in DB
 		alert('logged in seccesfully!');
@@ -298,6 +298,8 @@ function getRandColor() {
   
 
 function Start(upBtn, downBtn, leftBtn, rightBtn, ballsNum, gameTime, monstersNum) {
+	window.clearInterval(interval1);
+	window.clearInterval(interval2);
 
 	// pac image
 	pacImage = new Image();
@@ -585,7 +587,7 @@ function UpdatePosition(upBtn, downBtn, leftBtn, rightBtn) {
 		}
 	}
 
-	if(pac.i == bonus.i && pac.j == bonus.j){
+	if(pac.i == bonus.i && pac.j == bonus.j){ //found bonus
 		eatSound.play();
 		isBonus = true;
 		score = score + 50;
@@ -595,10 +597,10 @@ function UpdatePosition(upBtn, downBtn, leftBtn, rightBtn) {
 	}
 
 	if (isBonus == false){
-			UpdateBonusPosition()
+			UpdateBonusPosition() 
 	}
 
-	if(pac.i == pill.i && pac.j == pill.j){
+	if(pac.i == pill.i && pac.j == pill.j){ // found pill
 		eatSound.play();
 		Live ++;
 		board[pill.i][pill.j] = 0;
@@ -606,10 +608,11 @@ function UpdatePosition(upBtn, downBtn, leftBtn, rightBtn) {
 		pill.j = 0;
 	}
 
-	if((pac.i == monster1.i && pac.j == monster1.j) || 
+	if((pac.i == monster1.i && pac.j == monster1.j) ||  // found monster
 	(pac.i == monster2.i && pac.j == monster2.j) || 
 	(pac.i == monster3.i && pac.j == monster3.j) || 
 	(pac.i == monster4.i && pac.j == monster4.j)){
+		dieSound.play();
 		Live--;
 		score = score - 10;
 		if (Live == 0){
@@ -640,7 +643,7 @@ function UpdatePosition(upBtn, downBtn, leftBtn, rightBtn) {
 	var currentTime = new Date();
 	time_elapsed = (currentTime - startTime) / 1000;
 
-	if (pac.i == clock.i && pac.j == clock.j){
+	if (pac.i == clock.i && pac.j == clock.j){ // found clock
 		eatSound.play();
 		gameTime = gameTime + 20;
 		lblTime.value = gameTime;
@@ -700,15 +703,6 @@ function UpdatePosition(upBtn, downBtn, leftBtn, rightBtn) {
 	else{
 		Draw();
 	}
-
-
-
-	// monsters = [monster1,monster2,monster3,monster4]
-	// for (var i = 0; i < numOfMonster ; i++) {
-
-	// 	UpdateMonsterPosition(monsters[i], i+1);
-	
-	// }
 }
 
 function MonsterPosition() {
@@ -726,26 +720,23 @@ function UpdateMonsterPosition(monster1, num) {
 	var move1 = board[monster1.i][monster1.j - 1];
 	if (monster1.j > 0 && move1 != 4 && move1 != 6 && move1 != 7 && move1 != 8 && move1 != 9 && move1 != 50) { 
 		moves.push([monster1.i,monster1.j-1])
-		//monster1.j--;
 	}
 	var move2 = board[monster1.i][monster1.j + 1];
 	if (monster1.j < 10 && move2 != 4 && move2 != 6 && move2 != 7 && move2 != 8 && move2 != 9 && move2 != 50) {
 		moves.push([monster1.i,monster1.j+1])
-		//monster1.j++;
 	}
 	var move3 = board[monster1.i - 1][monster1.j];
 	if (monster1.i > 0 && move3 != 4 && move3 != 6 && move3 != 7 && move3 != 8 && move3 != 9 && move3 != 50) {
 		moves.push([monster1.i-1,monster1.j])
-		//monster1.i--;
 	}
 	var move4 = board[monster1.i + 1][monster1.j];
 	if (monster1.i < 10 && move4 != 4 && move4 != 6 && move4 != 7 && move4 != 8 && move4 != 9 && move4 != 50) {
 		moves.push([monster1.i+1,monster1.j])
-		//monster1.i++;
 	}
 	var minDis = 100; 
 	var curMove = [];
 
+	// pick move closest to pacman
 	for (var i = 0; i < moves.length ; i++) {
 		
 		monsterI = moves[i][0];
@@ -756,6 +747,7 @@ function UpdateMonsterPosition(monster1, num) {
 			curMove = moves[i];
 		}
 	}
+
 	var nextMove = board[curMove[0]][curMove[1]];
 	if (num==1){
 		board[monster1.i][monster1.j] = monster1LastPos;
@@ -842,6 +834,7 @@ function UpdateBonusPosition() {
 	
 }
 
+// drow monsters in corner and pac rand
 function afterDie(){
 
 	let countMunster = numOfMonster;
@@ -883,6 +876,8 @@ function afterDie(){
 
 
 function changePage(page) {
+	window.clearInterval(interval1);
+	window.clearInterval(interval2);
 	sound.pause();
 	if (page == welcome) {
 		$("#welcome").show();

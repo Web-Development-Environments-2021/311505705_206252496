@@ -86,7 +86,7 @@ body{
 	color: white;
 	padding: 16px 32px;
 	text-align: center;
-	font-size: 16px;
+	font-size: 22px;
 	margin: 4px 2px;
 	opacity: 0.6;
 	transition: 0.3s;
@@ -94,6 +94,8 @@ body{
 	text-decoration: none;
 	cursor: pointer;
 	border-radius: 12px;
+	font-weight: bold;
+
   }
   
   .firstButton:hover {opacity: 1}
