@@ -458,7 +458,7 @@ function Start(upBtn, downBtn, leftBtn, rightBtn, ballsNum, gameTime, monstersNu
 	);
 
 	interval1 = setInterval(function () { UpdatePosition(upBtn, downBtn, leftBtn, rightBtn); }, 150);
-	interval2 = setInterval(MonsterPosition, 150);
+	interval2 = setInterval(MonsterPosition, 550);
 
 }
 
