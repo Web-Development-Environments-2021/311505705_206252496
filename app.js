@@ -73,20 +73,20 @@ $(document).ready(function() {
 
 	$('#registerDetails').validate({
 		rules: {
-			regUserName: {required: true},
-			regPassword: {required: true,minlength: 6,lettersAndNumbers: true},
-			fullName: {required: true,lettersOnly: true},
-			Email: {required: true,email: true},
-			date: {required: true,},
+			detailsUserName: {required: true},
+			detailsPassword: {required: true,minlength: 6,lettersAndNumbers: true},
+			detailsFullName: {required: true,lettersOnly: true},
+			detailsEmail: {required: true,email: true},
+			detailsDate: {required: true,},
 			},
 		messages: {
-			regUserName: {required: "Enter user name",},
-			fullName: {required: "Enter full name",},
-			regPassword: {
+			detailsUserName: {required: "Enter user name",},
+			detailsFullName: {required: "Enter full name",},
+			detailsPassword: {
 				required: "Enter valid password",
 				minlength: "Password most contain at least 6 characters"},
-			Email: {required: "Enter valid email",},
-			date: {required: "Enter birth date",}
+			detailsEmail: {required: "Enter valid email",},
+			detailsDate: {required: "Enter birth date",}
 		}
 	})
 
@@ -113,8 +113,10 @@ $(document).ready(function() {
 			leftButton: {maxlength: 1,},
 		},
 		messages: {
-			ballsNum: {required: "Enter number between 50 to 90",},
-			gameTime: {required: "Enter number equal or longer than 60 sec",},
+			ballsNum: {required: "Enter number between 50 to 90",
+			numberOnly: "Number of balls must be between 50 to 90",},
+			gameTime: {required: "Enter number equal or longer than 60 sec",
+						time: "Game time must be longer than 60 sec",},
 			upButton: {maxlength: "Enter only one char",},
 			downButton: {maxlength: "Enter only one char",},
 			leftButton: {maxlength: "Enter only one char",},
@@ -145,8 +147,8 @@ function enterUserK() {
 }
 
 function store() {
-	userName = $("#regUserName").val();
-	let userPassword = $("#regPassword").val();
+	userName = $("#detailsUserName").val();
+	let userPassword = $("#detailsPassword").val();
 	localStorage.setItem(userName, userPassword);
 	alert('You have seccesfully registered!');
 }
@@ -671,7 +673,7 @@ function UpdatePosition(upBtn, downBtn, leftBtn, rightBtn) {
 		}
 	}
 	else {
-		if (gameTime+20 < time_elapsed){
+		if (gameTime < time_elapsed){
 			window.clearInterval(interval1);
 			window.clearInterval(interval2);
 			if ( score < 100){
