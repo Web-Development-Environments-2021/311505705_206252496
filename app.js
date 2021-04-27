@@ -49,6 +49,8 @@ dieSound.volume = 0.1;
 var userName;
 var interval1;
 var interval2;
+var isFinished = true;
+
 
 
 $(document).ready(function() {
@@ -81,11 +83,14 @@ $(document).ready(function() {
 			},
 		messages: {
 			detailsUserName: {required: "Enter user name",},
-			detailsFullName: {required: "Enter full name",},
+			detailsFullName: {required: "Enter full name",
+							lettersOnly:"Full name must be letters only",},
 			detailsPassword: {
 				required: "Enter valid password",
-				minlength: "Password most contain at least 6 characters"},
-			detailsEmail: {required: "Enter valid email",},
+				minlength: "Password must contain at least 6 characters",
+				lettersAndNumbers: "Password must contain both letters and numbers",},
+			detailsEmail: {required: "Enter Email",
+							email: "Please enter a valid email address"},
 			detailsDate: {required: "Enter birth date",}
 		}
 	})
@@ -133,7 +138,7 @@ $(document).ready(function() {
 
 });
 
-
+// cancel scroll with aroows
 document.onkeydown = function(evt) {
     evt = evt || window.event;
     var keyCode = evt.keyCode;
@@ -143,30 +148,32 @@ document.onkeydown = function(evt) {
 };
 
 function enterUserK() {
+	//enter user name k and password k into storage
 	localStorage.setItem("k", "k");
 }
 
 function store() {
 	userName = $("#detailsUserName").val();
 	let userPassword = $("#detailsPassword").val();
+	//enter user name and password into storage
 	localStorage.setItem(userName, userPassword);
 	alert('You have seccesfully registered!');
 }
 
 function checkLogin() {
-	var ans;
+	var res;
 	userName = document.getElementById('userName');
 	let userPassword = document.getElementById('password');
 	let storedPassword = localStorage.getItem(userName.value);
 	if (userPassword.value == storedPassword) { // check Password in DB
 		alert('logged in seccesfully!');
-		ans = true;
+		res = true;
 	} else  {
 		alert('Invalid details!');
-		ans = false;
+		res = false;
 	}
 	userName=userName.value;
-	if (ans == true) {
+	if (res == true) {
 		changePage(settings);
 	}
 }
@@ -175,13 +182,12 @@ function randSettings() {
 	$("#firstColor").val(getRandColor());
 	$("#secondColor").val(getRandColor());
 	$("#thirdColor").val(getRandColor());
-	let balls = Math.floor(Math.random() * 41) + 50;
+	let balls = Math.floor(Math.random()*41)+50;
 	$("#ballsNum").val(balls);
-	let time = Math.floor(Math.random() * 61) + 60;
-	$("#gameTime").val(time);
-	let monsters = Math.floor(Math.random() * 4) + 1;
+	let monsters = Math.floor(Math.random()*4)+1;
 	$("#monstersNum").val(monsters);
-	console.log(getRandColor())
+	let time = Math.floor(Math.random()*61)+60;
+	$("#gameTime").val(time);
 }
 
 function getRandColor() {
@@ -255,15 +261,15 @@ function getRandColor() {
 	}
 	document.getElementById('leftLabel').innerHTML = "Left: "+leftChar;
 
-	// Num of Balls
-	var ballsNum = $("#ballsNum").val();
-	ballsLabel.value = ballsNum;
-	document.getElementById('ballsLabel').innerHTML = "Number Of Balls: "+ballsNum;
-	
 	// Time of Game
 	gameTime = parseInt($("#gameTime").val());
 	timeLabel.value = gameTime;
 	document.getElementById('timeLabel').innerHTML = "Game Time: "+gameTime;
+
+	// Num of Balls
+	var ballsNum = $("#ballsNum").val();
+	ballsLabel.value = ballsNum;
+	document.getElementById('ballsLabel').innerHTML = "Number Of Balls: "+ballsNum;
 
 	// Num of Monsters
 	var monstersNum = $("#monstersNum").val();
@@ -354,8 +360,6 @@ function Start(upBtn, downBtn, leftBtn, rightBtn, ballsNum, gameTime, monstersNu
 	var ball_25 = ballsNum-ball_5-ball_15;
 	gameTime = gameTime;
 	pac_color = "yellow";
-	var cnt = 144; // size of board
-	var food_remain = ballsNum; // num of dots
 	var monster_remain = monstersNum; // num of monster
 	numOfMonster = monstersNum;
 	var pacman_remain = 1; 
@@ -393,35 +397,35 @@ function Start(upBtn, downBtn, leftBtn, rightBtn, ballsNum, gameTime, monstersNu
 				}
 		}
 	}
-	var pillCell = findRandomEmptyCell(board);
+	var pillCell = findEmptyCell(board);
 	board[pillCell[0]][pillCell[1]] = 10;
 	pill.i = pillCell[0];
 	pill.j = pillCell[1];
 
-	var clockCell = findRandomEmptyCell(board);
+	var clockCell = findEmptyCell(board);
 	board[clockCell[0]][clockCell[1]] = 20;
 	clock.i = clockCell[0];
 	clock.j = clockCell[1];
 
 	while (pacman_remain > 0) {
-		var emptyCell = findRandomEmptyCell(board);
+		var emptyCell = findEmptyCell(board);
 		board[emptyCell[0]][emptyCell[1]] = 2;
 		pac.i = emptyCell[0];
 		pac.j = emptyCell[1];
 		pacman_remain--;
 	}
 	while (ball_5 > 0) {
-		var emptyCell = findRandomEmptyCell(board);
+		var emptyCell = findEmptyCell(board);
 		board[emptyCell[0]][emptyCell[1]] = 5;
 		ball_5--;
 	}
 	while (ball_15 > 0) {
-		var emptyCell = findRandomEmptyCell(board);
+		var emptyCell = findEmptyCell(board);
 		board[emptyCell[0]][emptyCell[1]] = 15;
 		ball_15--;
 	}
 	while (ball_25 > 0) {
-		var emptyCell = findRandomEmptyCell(board);
+		var emptyCell = findEmptyCell(board);
 		board[emptyCell[0]][emptyCell[1]] = 25;
 		ball_25--;
 	}
@@ -466,13 +470,11 @@ function Start(upBtn, downBtn, leftBtn, rightBtn, ballsNum, gameTime, monstersNu
 
 }
 
-	function reset() {
 
-	};
-
-function findRandomEmptyCell(board) {
+function findEmptyCell(board) {
 	var i = Math.floor(Math.random() * 10 + 1);
 	var j = Math.floor(Math.random() * 10 + 1);
+	// If not empty try again
 	while (board[i][j] != 0) {
 		i = Math.floor(Math.random() * 10 + 1);
 		j = Math.floor(Math.random() * 10 + 1);
@@ -496,7 +498,7 @@ function GetKeyPressed(upBtn, downBtn, leftBtn, rightBtn) {
 }
 
 function Draw() {
-	canvas.width = canvas.width; //clean board
+	canvas.width = canvas.width;
 	lblScore.value = score;
 	lblTime.value =  time_elapsed;
 	lblLive.value = Live;
@@ -508,19 +510,19 @@ function Draw() {
 			center.y = j * 60 + 30;
 			if (board[i][j] == 2) {
 				if (KeyPressedPacImg==1){ // Packmen
-					context.drawImage(pacUp, center.x-30, center.y-30 ,60,60);
+					context.drawImage(pacUp, center.x-30, center.y-30 ,65,65);
 				}
 				if (KeyPressedPacImg==2){
-					context.drawImage(pacDown, center.x-30, center.y-30 ,60,60);
+					context.drawImage(pacDown, center.x-30, center.y-30 ,65,65);
 				}
 				if (KeyPressedPacImg==3){
-					context.drawImage(pacLeft, center.x-30, center.y-30 ,60,60);
+					context.drawImage(pacLeft, center.x-30, center.y-30 ,65,65);
 				}
 				if (KeyPressedPacImg==4){
-					context.drawImage(pacRight, center.x-30, center.y-30 ,60,60);
+					context.drawImage(pacRight, center.x-30, center.y-30 ,65,65);
 				}
 				if (KeyPressedPacImg==null){
-					context.drawImage(pacRight, center.x-30, center.y-30 ,60,60);
+					context.drawImage(pacRight, center.x-30, center.y-30 ,65,65);
 				}
 			} else if (board[i][j] == 5) { // ball 5 point
 				context.beginPath();
@@ -643,7 +645,7 @@ function UpdatePosition(upBtn, downBtn, leftBtn, rightBtn) {
 
 	board[pac.i][pac.j] = 2;
 	var currentTime = new Date();
-	time_elapsed = (currentTime - startTime) / 1000;
+	time_elapsed = (currentTime - startTime) / 1000; // time played
 
 	if (pac.i == clock.i && pac.j == clock.j){ // found clock
 		eatSound.play();
@@ -656,7 +658,7 @@ function UpdatePosition(upBtn, downBtn, leftBtn, rightBtn) {
 		clock.j = 0;
 		
 	}
-	if (isClock == false){
+	if (isClock == false){ // if clock was eaten
 		if (gameTime < time_elapsed){
 			window.clearInterval(interval1);
 			window.clearInterval(interval2);
@@ -695,14 +697,31 @@ function UpdatePosition(upBtn, downBtn, leftBtn, rightBtn) {
 		KeyPressedPacImg=x;
 	}
 
+	// check if finished all balls
+	var isFinished5 = true;
+	var isFinished15 = true;
+	var isFinished25 = true;
+
+	for (var i = 0; i<12; i++){
+		isFinished5 = board[i].includes(5);
+		isFinished15 = board[i].includes(15);
+		isFinished25 = board[i].includes(25);
+		if (isFinished5 == true || isFinished15 == true || isFinished25 == true){
+			isFinished = true;
+			console.log(isFinished);
+
+		}
+	}
+
 	// Finished all balls
-	if (ballsFirstNum <= 0 ){
+	if(isFinished == false){
 		window.clearInterval(interval1);
 		window.clearInterval(interval2);
 		alert("Winner!!!");
 		sound.pause();
 	}
 	else{
+		isFinished = false; // game over, all balls was eaten
 		Draw();
 	}
 }
@@ -717,7 +736,7 @@ function MonsterPosition() {
 
 }
 function UpdateMonsterPosition(monster1, num) {
-	
+	// find possible moves for monster
 	moves =new Array();
 	var move1 = board[monster1.i][monster1.j - 1];
 	if (monster1.j > 0 && move1 != 4 && move1 != 6 && move1 != 7 && move1 != 8 && move1 != 9 && move1 != 50) { 
@@ -836,7 +855,7 @@ function UpdateBonusPosition() {
 	
 }
 
-// drow monsters in corner and pac rand
+// draw monsters in corner and pac rand
 function afterDie(){
 
 	let countMunster = numOfMonster;
@@ -869,7 +888,7 @@ function afterDie(){
 	}
 	board[pac.i][pac.j] = 0;
 
-	var emptyCell = findRandomEmptyCell(board);
+	var emptyCell = findEmptyCell(board);
 	board[emptyCell[0]][emptyCell[1]] = 2;
 	pac.i = emptyCell[0];
 	pac.j = emptyCell[1];
@@ -878,9 +897,11 @@ function afterDie(){
 
 
 function changePage(page) {
+	// clear Interval
 	window.clearInterval(interval1);
 	window.clearInterval(interval2);
 	sound.pause();
+	// move to page welcome
 	if (page == welcome) {
 		$("#welcome").show();
 		$("#login").hide();
@@ -889,7 +910,7 @@ function changePage(page) {
 		$("#settings").hide();
 		$("#startGame").hide();
 	}
-
+	// move to page register
 	else if (page == register) {
 		$("#register").show();
 		$("#welcome").hide();
@@ -899,7 +920,7 @@ function changePage(page) {
 		$("#startGame").hide();
 
 	}
-
+	// move to page login
 	else if (page == login) {
 		$("#login").show();
 		$("#welcome").hide();
@@ -908,7 +929,7 @@ function changePage(page) {
 		$("#settings").hide();
 		$("#startGame").hide();
 	}
-
+	// move to page settings
 	else if (page == settings) {
 		$("#settings").show();
 		$("#welcome").hide();
@@ -918,6 +939,7 @@ function changePage(page) {
 		$("#startGame").hide();
 
 	}
+	// move to page startGame
 	else if (page == startGame) {
 		$("#startGame").show();
 		$("#welcome").hide();
